@@ -202,6 +202,7 @@ export const SearchView = observer(
           )}
         />
         <Searchbar
+          testID="hf-search-input"
           value={searchQuery}
           onChangeText={handleSearchChange}
           placeholder={l10n.models.search.searchPlaceholder}

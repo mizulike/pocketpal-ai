@@ -87,12 +87,14 @@ export const SidebarContent: React.FC<DrawerContentComponentProps> = observer(
           <DrawerContentScrollView {...props}>
             <Drawer.Section showDivider={false}>
               <Drawer.Item
+                testID="drawer-chat-item"
                 label={l10n.components.sidebarContent.menuItems.chat}
                 icon={() => <ChatIcon stroke={theme.colors.primary} />}
                 onPress={() => props.navigation.navigate(ROUTES.CHAT)}
                 style={styles.menuDrawerItem}
               />
               <Drawer.Item
+                testID="drawer-models-item"
                 label={l10n.components.sidebarContent.menuItems.models}
                 icon={() => <ModelIcon stroke={theme.colors.primary} />}
                 onPress={() => props.navigation.navigate(ROUTES.MODELS)}

@@ -21,6 +21,7 @@ interface SearchbarProps {
   blurIntensity?: number;
   gradientLocations?: number[];
   showBlur?: boolean;
+  testID?: string;
 }
 
 const SearchIcon = ({color}: {color: string}) => (
@@ -40,6 +41,7 @@ export const Searchbar = ({
   blurIntensity = 4,
   gradientLocations = [0, 0.1, 1],
   showBlur = true,
+  testID,
 }: SearchbarProps) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -76,6 +78,7 @@ export const Searchbar = ({
         </MaskedView>
       ) : null}
       <PaperSearchbar
+        testID={testID}
         placeholder={placeholder}
         onChangeText={onChangeText}
         value={value}

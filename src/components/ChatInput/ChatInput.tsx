@@ -374,6 +374,7 @@ export const ChatInput = observer(
               </Text>
             )}
             <TextInput
+              testID="chat-text-input"
               ref={inputRef}
               multiline
               key={onSurfaceColor}

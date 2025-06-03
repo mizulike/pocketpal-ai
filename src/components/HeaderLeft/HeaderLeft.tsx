@@ -13,6 +13,7 @@ export const HeaderLeft: React.FC = () => {
 
   return (
     <TouchableOpacity
+      testID="header-menu-button"
       style={[styles.menuIcon]}
       onPress={() => navigation.openDrawer()}>
       <MenuIcon stroke={theme.colors.primary} />
