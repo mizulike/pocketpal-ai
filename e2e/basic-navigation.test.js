@@ -4,9 +4,9 @@ const {
   waitForAppToLoad,
   openHFSearchModal,
   performHFSearch,
-  closeModalBySwipe,
   sendChatMessage,
   testAppStateChange,
+  closeHFSearchModal,
 } = require('./helpers/navigation-helpers');
 
 describe('Basic Navigation E2E Test', () => {
@@ -46,7 +46,7 @@ describe('Basic Navigation E2E Test', () => {
 
     // Step 5: Close search modal and navigate to Chat
     console.log('💬 Step 5: Testing navigation to Chat screen...');
-    await closeModalBySwipe('hf-model-search-view');
+    await closeHFSearchModal(); // a workaround for now. only works on iPhone 16 Pro
 
     // Step 6: Navigate to Chat screen
     console.log('📱 Step 6: Navigating to Chat screen...');

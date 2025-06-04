@@ -77,6 +77,23 @@ export const closeModalBySwipe = async (modalId, waitTime = 1000) => {
 };
 
 /**
+ * Close a modal using tapping the backdrop
+ * @param {number} waitTime - Time to wait after closing (default: 1000ms)
+ */
+export const closeHFSearchModal = async (waitTime = 1000) => {
+  console.log('🔽 Closing HF search modal...');
+
+  try {
+    await device.tap({x: 100, y: 60}); // a workaround for now. only works on iPhone 16 Pro
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    console.log('✅ HF search modal closed via backdrop tap');
+  } catch (error) {
+    console.warn('⚠️ Backdrop tap failed, ...');
+    throw error;
+  }
+};
+
+/**
  * Close a modal by tapping a close button
  * @param {string} closeButtonId - The testID of the close button
  * @param {number} waitTime - Time to wait after closing (default: 1000ms)
