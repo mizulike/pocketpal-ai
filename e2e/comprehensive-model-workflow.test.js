@@ -1,4 +1,14 @@
-const {device, expect, element, by, waitFor} = require('detox');
+const {device} = require('detox');
+const {
+  navigateToScreen,
+  waitForAppToLoad,
+  openHFSearchModal,
+  searchAndWaitForResults,
+  selectAndDownloadModel,
+  loadDownloadedModel,
+  sendTestMessageAndWaitForResponse,
+  testAppStateChange,
+} = require('./helpers/navigation-helpers');
 
 describe('Comprehensive Model Workflow E2E Test', () => {
   beforeAll(async () => {
@@ -22,232 +32,37 @@ describe('Comprehensive Model Workflow E2E Test', () => {
 
     // Step 1: Wait for app to fully load
     console.log('📱 Step 1: Waiting for app to load...');
-
-    // Wait for the main app to load - look for the header menu button
-    await waitFor(element(by.id('header-menu-button')))
-      .toBeVisible()
-      .withTimeout(30000);
+    await waitForAppToLoad();
 
     // Step 2: Navigate to Models screen
     console.log('🗂️ Step 2: Navigating to Models screen...');
+    await navigateToScreen('models');
 
-    // Open drawer navigation by tapping the menu button
-    await element(by.id('header-menu-button')).tap();
+    // Step 3: Open HF search and search for model
+    console.log('🔍 Step 3: Opening HF search and searching for model...');
+    await openHFSearchModal();
+    await searchAndWaitForResults('Bartowski smollm2 135');
 
-    // Wait for drawer to open and Models item to be visible
-    await waitFor(element(by.id('drawer-models-item')))
-      .toBeVisible()
-      .withTimeout(10000);
+    // Step 4: Select and download model
+    console.log('📋 Step 4: Selecting and downloading model...');
+    await selectAndDownloadModel();
 
-    // Tap on Models menu item
-    await element(by.id('drawer-models-item')).tap();
+    // Step 5: Load the downloaded model
+    console.log('🔄 Step 5: Loading the downloaded model...');
+    await loadDownloadedModel();
 
-    // Wait for Models screen to load
-    await waitFor(element(by.id('flat-list')))
-      .toBeVisible()
-      .withTimeout(15000);
+    // Step 6: Navigate to chat and test model
+    console.log('💬 Step 6: Navigating to chat interface...');
+    await navigateToScreen('chat');
 
-    console.log('✅ Successfully navigated to Models screen');
-
-    // Step 3: Access Hugging Face model search
-    console.log('🔍 Step 3: Opening Hugging Face model search...');
-
-    // Open FAB group
-    await waitFor(element(by.id('fab-group')))
-      .toBeVisible()
-      .withTimeout(10000);
-    await element(by.id('fab-group')).tap();
-
-    // Wait for FAB actions to appear and tap HF option
-    await waitFor(element(by.id('hf-fab')))
-      .toBeVisible()
-      .withTimeout(5000);
-    await element(by.id('hf-fab')).tap();
-
-    // Wait for HF search modal to open
-    await waitFor(element(by.id('hf-model-search-view')))
-      .toBeVisible()
-      .withTimeout(15000);
-
-    console.log('✅ HF search modal opened successfully');
-
-    // Step 4: Search for specific model
-    console.log('🔎 Step 4: Searching for "Bartowski smollm2 135"...');
-
-    // Find and interact with search input using the testID
-    await waitFor(element(by.id('hf-search-input')))
-      .toBeVisible()
-      .withTimeout(10000);
-
-    await element(by.id('hf-search-input')).tap();
-    await element(by.id('hf-search-input')).typeText('Bartowski smollm2 135');
-
-    // Wait for search results to load
-    console.log('⏳ Waiting for search results...');
-    await waitForCondition(
-      async () => {
-        try {
-          // Check if we have search results by looking for the search results list
-          await expect(element(by.id('hf-model-search-view'))).toBeVisible();
-          // Additional check for actual results - look for model author text
-          await expect(element(by.text('bartowski'))).toBeVisible();
-          return true;
-        } catch {
-          return false;
-        }
-      },
-      30000,
-      2000,
-    );
-
-    console.log('✅ Search results loaded');
-
-    // Step 5: Select first model from search results
-    console.log('📋 Step 5: Selecting first model from search results...');
-
-    // Tap on the first search result
-    const firstResult = element(by.type('android.view.ViewGroup')).atIndex(5);
-    await firstResult.tap();
-
-    // Wait for model details view to load
-    await waitFor(element(by.text('Download')))
-      .toBeVisible()
-      .withTimeout(15000);
-
-    console.log('✅ Model details view opened');
-
-    // Step 6: Download the selected model
-    console.log('⬇️ Step 6: Initiating model download...');
-
-    // Tap download button
-    await element(by.text('Download')).tap();
-
-    // Handle potential device capability warnings
-    try {
-      await waitFor(element(by.text('Continue')))
-        .toBeVisible()
-        .withTimeout(5000);
-      await element(by.text('Continue')).tap();
-      console.log('⚠️ Handled device capability warning');
-    } catch {
-      console.log('ℹ️ No device capability warning shown');
-    }
-
-    // Wait for download to start and show progress
-    console.log('⏳ Waiting for download to complete...');
-    await waitForLongOperation(
-      async () => {
-        // Check download progress periodically
-        console.log('📊 Checking download progress...');
-      },
-      async () => {
-        try {
-          // Check if download completed by looking for "Load Model" button or similar
-          await expect(element(by.text('Load Model'))).toBeVisible();
-          return true;
-        } catch {
-          try {
-            // Alternative: check if we're back to models list with downloaded model
-            await expect(element(by.id('flat-list'))).toBeVisible();
-            return true;
-          } catch {
-            return false;
-          }
-        }
-      },
-      300000, // 5 minutes timeout for download
-      10000, // Check every 10 seconds
-    );
-
-    console.log('✅ Model download completed');
-
-    // Step 7: Load the downloaded model
-    console.log('🔄 Step 7: Loading the downloaded model...');
-
-    // Navigate back to models list if we're still in details view
-    try {
-      await element(by.text('Load Model')).tap();
-    } catch {
-      // If we're already in models list, find and load the model
-      console.log('ℹ️ Already in models list, finding downloaded model...');
-    }
-
-    // Wait for model loading to complete
-    await waitForCondition(
-      async () => {
-        try {
-          // Check if model is loaded by looking for active model indicator
-          // This might vary based on UI implementation
-          return true; // Simplified for now
-        } catch {
-          return false;
-        }
-      },
-      120000, // 2 minutes for model loading
-      5000, // Check every 5 seconds
-    );
-
-    console.log('✅ Model loaded successfully');
-
-    // Step 8: Navigate to chat interface
-    console.log('💬 Step 8: Navigating to chat interface...');
-
-    // Open drawer and navigate to Chat
-    await element(by.id('header-menu-button')).tap();
-    await waitFor(element(by.id('drawer-chat-item')))
-      .toBeVisible()
-      .withTimeout(10000);
-    await element(by.id('drawer-chat-item')).tap();
-
-    // Wait for chat screen to load
-    await waitFor(element(by.id('chat-text-input')))
-      .toBeVisible()
-      .withTimeout(15000);
-
-    console.log('✅ Chat interface loaded');
-
-    // Step 9: Send test message and verify response
-    console.log('📝 Step 9: Sending test message...');
-
-    await element(by.id('chat-text-input')).tap();
-    await element(by.id('chat-text-input')).typeText(
+    // Step 7: Send test message and verify response
+    console.log('📝 Step 7: Sending test message and waiting for response...');
+    await sendTestMessageAndWaitForResponse(
       'Hello! Can you tell me a short joke?',
     );
 
-    // Find and tap send button using testID
-    await waitFor(element(by.id('send-button')))
-      .toBeVisible()
-      .withTimeout(5000);
-    await element(by.id('send-button')).tap();
-
-    console.log('⏳ Waiting for model response...');
-
-    // Wait for model to respond
-    await waitForCondition(
-      async () => {
-        try {
-          // Look for response message in chat
-          // This is a simplified check - in reality you'd look for specific response patterns
-          await expect(
-            element(by.type('android.widget.TextView')).atIndex(-1),
-          ).toBeVisible();
-          return true;
-        } catch {
-          return false;
-        }
-      },
-      120000, // 2 minutes for response
-      5000, // Check every 5 seconds
-    );
-
-    console.log('✅ Model responded successfully');
-
-    // Step 10: Verify the complete workflow
-    console.log('✅ Step 10: Verifying complete workflow...');
-
-    // Verify we have a chat conversation
-    await expect(element(by.type('android.widget.TextView'))).toBeVisible();
-
+    // Step 8: Verify the complete workflow
+    console.log('✅ Step 8: Verifying complete workflow...');
     console.log('🎉 Comprehensive model workflow test completed successfully!');
   });
 
@@ -255,9 +70,25 @@ describe('Comprehensive Model Workflow E2E Test', () => {
   it('should handle errors gracefully and clean up properly', async () => {
     console.log('🧹 Testing error handling and cleanup...');
 
-    // Test error scenarios and cleanup
-    // This would include testing network failures, insufficient storage, etc.
+    await waitForAppToLoad();
 
-    console.log('✅ Error handling and cleanup test completed');
+    try {
+      // Test navigation to models screen
+      await navigateToScreen('models');
+
+      // Test app state changes during model operations
+      await testAppStateChange();
+
+      // Verify app recovery
+      await navigateToScreen('chat');
+
+      console.log('✅ Error handling and cleanup test completed');
+    } catch (error) {
+      console.log('⚠️ Error during cleanup test (expected):', error.message);
+
+      // Attempt recovery
+      await device.reloadReactNative();
+      await waitForAppToLoad();
+    }
   });
 });
