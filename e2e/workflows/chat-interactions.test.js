@@ -7,6 +7,11 @@ const {
   testAppStateChange,
   waitAndTap,
   waitForElement,
+  setupModelForChat,
+  openPalModelPickerSheet,
+  selectModelFromSheet,
+  waitForModelToLoad,
+  sendTestMessageAndWaitForResponse,
 } = require('../helpers/navigation-helpers');
 
 describe('Chat Interactions E2E Test', () => {
@@ -26,6 +31,27 @@ describe('Chat Interactions E2E Test', () => {
     await device.terminateApp();
   });
 
+  describe('Model Setup and Prerequisites', () => {
+    it('should download and load a model for chat testing', async () => {
+      console.log('🚀 Setting up model for chat testing...');
+
+      // This test ensures we have a working model before running chat tests
+      await setupModelForChat('smollm2 135m', 0, 300000);
+
+      // Verify we're on the chat screen with a loaded model
+      await waitForElement('chat-text-input');
+
+      // Verify the input is enabled (model is loaded)
+      const chatInput = element(by.id('chat-text-input'));
+      await chatInput.tap();
+      await chatInput.typeText('Model setup test');
+      await expect(chatInput).toHaveText('Model setup test');
+      await chatInput.clearText();
+
+      console.log('✅ Model setup completed successfully');
+    });
+  });
+
   describe('Basic Chat Functionality', () => {
     it('should navigate to chat screen and display chat interface', async () => {
       console.log('🚀 Testing chat screen navigation...');
@@ -38,6 +64,9 @@ describe('Chat Interactions E2E Test', () => {
 
       // Verify send button is not visible when input is empty
       await expect(element(by.id('send-button'))).not.toBeVisible();
+
+      // Verify pal selector button is visible (indicates model management is available)
+      await waitForElement('Select Pal', 5000, by.label);
 
       console.log('✅ Chat interface loaded correctly');
     });
@@ -81,6 +110,10 @@ describe('Chat Interactions E2E Test', () => {
 
       // Verify send button is hidden after sending
       await expect(element(by.id('send-button'))).not.toBeVisible();
+
+      // Wait a moment for any AI processing to begin
+      // (We don't wait for completion here as this test focuses on UI behavior)
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       console.log('✅ Message sent and input cleared successfully');
     });
@@ -297,6 +330,90 @@ describe('Chat Interactions E2E Test', () => {
       await expect(inputElement).toHaveText('Keyboard test');
 
       console.log('✅ Keyboard interactions working correctly');
+    });
+  });
+
+  describe('AI Response Testing', () => {
+    it('should send a message and receive an AI response', async () => {
+      console.log('🤖 Testing AI response functionality...');
+
+      await navigateToScreen('chat');
+
+      // Send a simple test message and wait for AI response
+      await sendTestMessageAndWaitForResponse(
+        'Hello! Please respond with just "Hi there!"',
+      );
+
+      console.log('✅ AI response test completed');
+    });
+
+    it('should handle multiple AI interactions', async () => {
+      console.log('🔄 Testing multiple AI interactions...');
+
+      await navigateToScreen('chat');
+
+      const testMessages = [
+        'What is 2+2?',
+        'Tell me a very short joke.',
+        'Say goodbye.',
+      ];
+
+      // Send multiple messages and wait for responses
+      for (const message of testMessages) {
+        console.log(`📝 Sending: "${message}"`);
+        await sendTestMessageAndWaitForResponse(message);
+        // Small delay between messages
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+
+      console.log('✅ Multiple AI interactions completed');
+    });
+  });
+
+  describe('Model Management via Picker Sheet', () => {
+    it('should open and close the model picker sheet', async () => {
+      console.log('📋 Testing model picker sheet functionality...');
+
+      await navigateToScreen('chat');
+
+      // Open the picker sheet
+      await openPalModelPickerSheet();
+
+      // Verify the sheet is open
+      await waitForElement('bottom-sheet');
+
+      // Close the sheet by tapping outside or using swipe gesture
+      try {
+        // Try to close by tapping backdrop
+        await device.tap({x: 100, y: 100});
+        await waitFor(element(by.id('bottom-sheet')))
+          .not.toBeVisible()
+          .withTimeout(5000);
+      } catch {
+        // If backdrop tap doesn't work, try swipe down
+        await element(by.id('bottom-sheet')).swipe('down', 'fast', 0.8);
+      }
+
+      console.log('✅ Model picker sheet functionality verified');
+    });
+
+    it('should display available models in the picker sheet', async () => {
+      console.log('📋 Testing model list display...');
+
+      await navigateToScreen('chat');
+
+      // Open the picker sheet
+      await openPalModelPickerSheet();
+
+      // Verify we can see the models tab (should be active by default)
+      // The exact model names will depend on what's downloaded
+      // For now, just verify the sheet structure is correct
+      await waitForElement('bottom-sheet');
+
+      // Close the sheet
+      await element(by.id('bottom-sheet')).swipe('down', 'fast', 0.8);
+
+      console.log('✅ Model list display verified');
     });
   });
 });

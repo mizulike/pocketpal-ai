@@ -539,3 +539,127 @@ export const sendTestMessageAndWaitForResponse = async (
 
   console.log('✅ AI response received');
 };
+
+/**
+ * Open the pal/model picker sheet from chat screen
+ * @param {number} timeout - Timeout in milliseconds (default: 10000)
+ */
+export const openPalModelPickerSheet = async (timeout = 10000) => {
+  console.log('🔽 Opening pal/model picker sheet...');
+
+  // Look for the pal selector button (chevron button) using accessibility label
+  await waitFor(element(by.label('Select Pal')))
+    .toBeVisible()
+    .withTimeout(timeout);
+
+  // Tap the pal selector button
+  await element(by.label('Select Pal')).tap();
+
+  // Wait for the picker sheet to open
+  await waitFor(element(by.id('bottom-sheet')))
+    .toBeVisible()
+    .withTimeout(timeout);
+
+  console.log('✅ Pal/model picker sheet opened successfully');
+};
+
+/**
+ * Select a model from the picker sheet
+ * @param {string} modelName - The name of the model to select
+ * @param {number} timeout - Timeout in milliseconds (default: 15000)
+ */
+export const selectModelFromSheet = async (modelName, timeout = 15000) => {
+  console.log(`🎯 Selecting model: "${modelName}" from picker sheet...`);
+
+  try {
+    // Wait for the model item to be visible and tap it
+    await waitFor(element(by.text(modelName)))
+      .toBeVisible()
+      .withTimeout(timeout);
+
+    await element(by.text(modelName)).tap();
+
+    // Wait for the sheet to close
+    await waitFor(element(by.id('bottom-sheet')))
+      .not.toBeVisible()
+      .withTimeout(timeout);
+
+    console.log(`✅ Model "${modelName}" selected successfully`);
+  } catch (error) {
+    console.log(`⚠️ Failed to select model "${modelName}":`, error.message);
+    throw error;
+  }
+};
+
+/**
+ * Wait for a model to finish loading
+ * @param {number} timeout - Timeout in milliseconds (default: 120000)
+ */
+export const waitForModelToLoad = async (timeout = 120000) => {
+  console.log('⏳ Waiting for model to load...');
+
+  await waitForCondition(
+    async () => {
+      try {
+        // Check if chat input is enabled (indicates model is loaded)
+        const chatInput = element(by.id('chat-text-input'));
+        await chatInput.tap();
+        await chatInput.typeText('test');
+        await chatInput.clearText();
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    timeout,
+    5000,
+  );
+
+  console.log('✅ Model loaded successfully');
+};
+
+/**
+ * Complete model setup workflow: download, load, and verify
+ * @param {string} searchTerm - The model search term (default: 'smollm2 135m')
+ * @param {number} resultIndex - Index of search result to select (default: 0)
+ * @param {number} timeout - Timeout in milliseconds (default: 300000)
+ */
+export const setupModelForChat = async (
+  searchTerm = 'smollm2 135m',
+  resultIndex = 0,
+  timeout = 300000,
+) => {
+  console.log('🚀 Starting complete model setup for chat testing...');
+
+  try {
+    // Step 1: Navigate to Models screen
+    console.log('📱 Step 1: Navigating to Models screen...');
+    await navigateToScreen('models');
+
+    // Step 2: Open HF search and search for model
+    console.log('🔍 Step 2: Searching for model...');
+    await openHFSearchModal();
+    await searchAndWaitForResults(searchTerm);
+
+    // Step 3: Select and download model
+    console.log('📋 Step 3: Downloading model...');
+    await selectAndDownloadModel(resultIndex, timeout);
+
+    // Step 4: Load the downloaded model
+    console.log('🔄 Step 4: Loading model...');
+    await loadDownloadedModel();
+
+    // Step 5: Navigate to chat
+    console.log('💬 Step 5: Navigating to chat...');
+    await navigateToScreen('chat');
+
+    // Step 6: Wait for model to be ready
+    console.log('⏳ Step 6: Waiting for model to be ready...');
+    await waitForModelToLoad();
+
+    console.log('✅ Model setup completed successfully!');
+  } catch (error) {
+    console.log('❌ Model setup failed:', error.message);
+    throw error;
+  }
+};
