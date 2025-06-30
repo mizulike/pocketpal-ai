@@ -19,12 +19,17 @@ jest.mock('@dr.pogodin/react-native-fs', () => ({
   readFile: jest.fn(),
 }));
 
-jest.mock('react-native-document-picker', () => ({
+jest.mock('@react-native-documents/picker', () => ({
   pick: jest.fn(),
-  isCancel: jest.fn(err => err && err.code === 'DOCUMENT_PICKER_CANCELED'),
   types: {
     allFiles: 'public.all-files',
   },
+  errorCodes: {
+    OPERATION_CANCELED: 'OPERATION_CANCELED',
+    IN_PROGRESS: 'ASYNC_OP_IN_PROGRESS',
+    UNABLE_TO_OPEN_FILE_TYPE: 'UNABLE_TO_OPEN_FILE_TYPE',
+  },
+  isErrorWithCode: jest.fn(err => err && typeof err.code === 'string'),
 }));
 
 jest.mock('../../repositories/ChatSessionRepository');

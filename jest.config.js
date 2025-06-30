@@ -36,8 +36,8 @@ module.exports = {
     'react-dom': '<rootDir>/__mocks__/external/react-dom.js',
     'react-native-device-info':
       '<rootDir>/__mocks__/external/react-native-device-info.js',
-    'react-native-document-picker':
-      '<rootDir>/__mocks__/external/react-native-document-picker.js',
+    '@react-native-documents/picker':
+      '<rootDir>/__mocks__/external/@react-native-documents/picker.js',
     '@dr.pogodin/react-native-fs':
       '<rootDir>/__mocks__/external/@dr.pogodin/react-native-fs.js',
     'react-native-haptic-feedback':

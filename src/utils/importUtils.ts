@@ -1,8 +1,13 @@
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import DocumentPicker from 'react-native-document-picker';
 import {Platform} from 'react-native';
 import {v4 as uuidv4} from 'uuid';
 import 'react-native-get-random-values';
+import {
+  pick,
+  types,
+  errorCodes,
+  isErrorWithCode,
+} from '@react-native-documents/picker';
 
 import {chatSessionRepository} from '../repositories/ChatSessionRepository';
 import {MessageType} from './types';
@@ -38,9 +43,8 @@ export interface ImportedMessage {
  */
 export const pickJsonFile = async (): Promise<string | null> => {
   try {
-    const res = await DocumentPicker.pick({
-      type:
-        Platform.OS === 'ios' ? 'public.json' : [DocumentPicker.types.allFiles],
+    const res = await pick({
+      type: Platform.OS === 'ios' ? 'public.json' : [types.allFiles],
     });
 
     if (res && res.length > 0) {
@@ -58,7 +62,7 @@ export const pickJsonFile = async (): Promise<string | null> => {
     }
     return null;
   } catch (err: any) {
-    if (DocumentPicker.isCancel(err)) {
+    if (isErrorWithCode(err) && err.code === errorCodes.OPERATION_CANCELED) {
       // User cancelled the picker
       return null;
     }

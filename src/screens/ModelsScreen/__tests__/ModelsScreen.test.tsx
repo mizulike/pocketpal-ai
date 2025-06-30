@@ -2,7 +2,7 @@ import React from 'react';
 import {Alert} from 'react-native';
 
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import DocumentPicker from 'react-native-document-picker';
+import {pick} from '@react-native-documents/picker';
 import {fireEvent, render, waitFor, act} from '../../../../jest/test-utils';
 
 import {ModelsScreen} from '../ModelsScreen';
@@ -73,7 +73,7 @@ describe('ModelsScreen', () => {
   });
 
   it('adds a local model when the plus FAB is pressed', async () => {
-    (DocumentPicker.pick as jest.Mock).mockResolvedValue([
+    (pick as jest.Mock).mockResolvedValue([
       {
         uri: '/mock/file/path',
         name: 'mockModelFile.bin',
@@ -112,7 +112,7 @@ describe('ModelsScreen', () => {
     });
 
     await waitFor(() => {
-      expect(DocumentPicker.pick).toHaveBeenCalled();
+      expect(pick).toHaveBeenCalled();
       expect(RNFS.copyFile).toHaveBeenCalledWith(
         '/mock/file/path',
         '/path/to/documents/models/local/mockModelFile.bin',
@@ -125,7 +125,7 @@ describe('ModelsScreen', () => {
 
   it('shows a confirmation alert if file already exists and replaces it', async () => {
     (RNFS.exists as jest.Mock).mockResolvedValue(true);
-    (DocumentPicker.pick as jest.Mock).mockResolvedValue([
+    (pick as jest.Mock).mockResolvedValue([
       {
         uri: '/mock/file/path',
         name: 'mockModelFile.bin',
@@ -169,7 +169,7 @@ describe('ModelsScreen', () => {
 
   it('does not replace or copy the file when user cancels the action', async () => {
     (RNFS.exists as jest.Mock).mockResolvedValue(true);
-    (DocumentPicker.pick as jest.Mock).mockResolvedValue([
+    (pick as jest.Mock).mockResolvedValue([
       {
         uri: '/mock/file/path',
         name: 'mockModelFile.bin',
@@ -211,7 +211,7 @@ describe('ModelsScreen', () => {
 
   it('keeps both files when user chooses to keep both', async () => {
     (RNFS.exists as jest.Mock).mockResolvedValueOnce(true); // File already exists
-    (DocumentPicker.pick as jest.Mock).mockResolvedValue([
+    (pick as jest.Mock).mockResolvedValue([
       {
         uri: '/mock/file/path',
         name: 'mockModelFile.bin',

@@ -30,6 +30,21 @@ jest.mock('react-native-reanimated', () => {
 
   Reanimated.default.createAnimatedComponent = (Component: any) => Component;
 
+  Reanimated.useAnimatedKeyboard = jest.fn(() => ({
+    height: {
+      value: 0,
+      get: () => 0,
+    },
+    state: {
+      value: 0,
+      get: () => 0,
+    },
+    progress: {
+      value: 0,
+      get: () => 0,
+    },
+  }));
+
   return Reanimated;
 });
 
@@ -121,3 +136,11 @@ jest.mock('react-native-share', () => ({
 
 jest.mock('react-native-image-picker');
 jest.mock('react-native-vision-camera');
+
+jest.mock(
+  'react-native/Libraries/Components/RefreshControl/RefreshControl',
+  () => ({
+    __esModule: true,
+    default: require('../__mocks__/external/RefreshControlMock'),
+  }),
+);
