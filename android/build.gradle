@@ -5,7 +5,7 @@ buildscript {
         compileSdkVersion = 35
         targetSdkVersion = 35
         ndkVersion = "26.1.10909125"
-        kotlinVersion = "1.9.24"
+        kotlinVersion = "2.1.20"
     }
     repositories {
         google()
@@ -19,7 +19,7 @@ buildscript {
         // Add the Google Services plugin dependency
         // This is used exclusively for sending benchmarks (with user consent) to Hugging Face Spaces via Firebase.
         // Firebase is used for App Check functionality, allowing unauthenticated users to submit their benchmark data securely.
-        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.google.gms:google-services:4.4.3'
     }
 }
 

@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.first
 import java.io.File
 import java.util.*
 import androidx.work.await
+import com.google.common.util.concurrent.ListenableFuture
+import kotlinx.coroutines.guava.await
 
 class DownloadModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -235,7 +237,8 @@ class DownloadModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                         
                         // Create new work request only if there isn't one running
                         val workName = getWorkName(downloadId)
-                        val workInfo = workManager.getWorkInfosForUniqueWork(workName).await().firstOrNull()
+                        val workInfos = workManager.getWorkInfosForUniqueWork(workName).await()
+                        val workInfo = workInfos.firstOrNull()
                         if (workInfo == null || workInfo.state.isFinished) {
                             Log.d(TAG, "Creating new work request for: $downloadId")
                             val workRequest = DownloadWorker.createWorkRequest(downloadId)
@@ -312,7 +315,7 @@ class DownloadModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
                 // Wait for cancellation to complete
                 withContext(Dispatchers.IO) {
                     try {
-                        operation.result.await()
+                        operation.await()
                     } catch (e: Exception) {
                         Log.e(TAG, "Error waiting for work cancellation", e)
                     }
