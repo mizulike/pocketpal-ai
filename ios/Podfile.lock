@@ -3237,7 +3237,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 3267432b637c9b38e86961b287f784ee1b08dde0
   ReactCodegen: 5d41e1df061200130dd326e55cdfdf94b0289c6e
   ReactCommon: b028d09a66e60ebd83ca59d8cc9a1216360db147
-  ReactNativeFs: 713bbff93eb105364ab677d3406c310a7aa310e0
+  ReactNativeFs: a3a49d71b5fd5538d8b76f7d7429dea4b754f460
   RNCAsyncStorage: b44e8a4e798c3e1f56bffccd0f591f674fb9198f
   RNCClipboard: f6679d470d0da2bce2a37b0af7b9e0bf369ecda5
   RNCMaskedView: 5ac123c29cd180580cafa370c6675d185f3be464

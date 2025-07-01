@@ -1,0 +1,14 @@
+diff --git a/node_modules/@dr.pogodin/react-native-fs/ReactNativeFs.podspec b/node_modules/@dr.pogodin/react-native-fs/ReactNativeFs.podspec
+index 4c050a2..aada770 100644
+--- a/node_modules/@dr.pogodin/react-native-fs/ReactNativeFs.podspec
++++ b/node_modules/@dr.pogodin/react-native-fs/ReactNativeFs.podspec
+@@ -16,8 +16,7 @@ Pod::Spec.new do |s|
+   s.resource_bundles = { 'RNFS_PrivacyInfo' => 'ios/PrivacyInfo.xcprivacy' }
+   s.frameworks = "AVFoundation", "Photos"
+   s.source_files = "ios/**/*.{h,m,mm,cpp}"
+-  s.private_header_files = "ios/**/*.h"
+-
++  s.public_header_files = "ios/RNFSBackgroundDownloads.h"
+ 
+   install_modules_dependencies(s)
+ end
