@@ -2178,7 +2178,7 @@ PODS:
     - Firebase/AppCheck (= 11.5.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.26.0):
+  - RNGestureHandler (2.27.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2963,7 +2963,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: d863506092aef7e7af3a1c350c913d867d795047
   RNFBApp: 72b96921c64702d51eca9f3ed579c1777efd0d7e
   RNFBAppCheck: 9e3bbada601e8c37fd066c04e46afdef5e4a3fed
-  RNGestureHandler: c7986dd1eb909e329882af067c05db0702a659b3
+  RNGestureHandler: e9dfbf95010aa6aa3212dcdefb0d38a42006cbab
   RNKeychain: 943b4dbceef4b3a310c9122c99d1e5b0bd66b9f3
   RNReactNativeHapticFeedback: 851adf794e1fcdc0664d80820fa3272ee8a6a538
   RNReanimated: 722d67dfde539bfe29b572878f4bc805f727726b
