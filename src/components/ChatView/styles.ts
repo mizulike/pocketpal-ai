@@ -1,5 +1,6 @@
 import {Platform, StyleSheet} from 'react-native';
 import {Theme} from '../../utils/types';
+import Color from 'tinycolor2';
 
 export const createStyles = ({theme}: {theme: Theme}) =>
   StyleSheet.create({
@@ -65,6 +66,13 @@ export const createStyles = ({theme}: {theme: Theme}) =>
             },
             android: {
               // Add boxShadow/dropShadow if new architecture is enabled
+              boxShadow: [{
+                offsetX: 0,
+                offsetY: -2,
+                blurRadius: 8,
+                spreadDistance: 0,
+                color: Color(theme.colors.shadow).setAlpha(0.1).toRgbString(),
+              }],
             },
           })
         : {}),
