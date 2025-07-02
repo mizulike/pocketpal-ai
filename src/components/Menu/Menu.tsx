@@ -63,15 +63,22 @@ export const Menu: React.FC<MenuProps> & {
         styles.content,
         hasActiveSubmenu && styles.contentWithSubmenu,
       ]}>
-      {React.Children.map(children, child =>
-        React.isValidElement<MenuItemProps>(child)
-          ? React.cloneElement(child, {
-              onSubmenuOpen: handleSubmenuOpen,
-              onSubmenuClose: handleSubmenuClose,
-              selectable,
-            })
-          : child,
-      )}
+      {React.Children.map(children, child => {
+        if (React.isValidElement<MenuItemProps>(child)) {
+          // Check if this is a React.Fragment - if so, don't try to clone it with our props
+          if (typeof child.type === 'symbol' || child.type === React.Fragment) {
+            return child;
+          }
+
+          // For all other valid React elements, try to clone with our props
+          return React.cloneElement(child, {
+            onSubmenuOpen: handleSubmenuOpen,
+            onSubmenuClose: handleSubmenuClose,
+            selectable,
+          });
+        }
+        return child;
+      })}
     </PaperMenu>
   );
 };
