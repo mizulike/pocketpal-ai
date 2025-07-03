@@ -1,6 +1,6 @@
 {
   "name": "PocketPal",
-  "version": "1.10.7",
+  "version": "1.10.13",
   "private": true,
   "scripts": {
     "prepare": "husky",
@@ -34,7 +34,7 @@
     "@gorhom/bottom-sheet": "^5.0.6",
     "@hookform/resolvers": "^3.10.0",
     "@nozbe/watermelondb": "^0.28.0",
-    "@pocketpalai/llama.rn": "^0.6.0-rc.5",
+    "@pocketpalai/llama.rn": "^0.6.0-rc.8.1",
     "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-clipboard/clipboard": "^1.15.0",
     "@react-native-community/blur": "^4.4.1",
@@ -89,7 +89,7 @@
     "@babel/core": "^7.25.2",
     "@babel/plugin-proposal-decorators": "^7.27.1",
     "@babel/preset-env": "^7.25.3",
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.4",
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
     "@react-native-community/cli": "15.0.1",
