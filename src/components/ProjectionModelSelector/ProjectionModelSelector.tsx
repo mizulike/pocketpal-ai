@@ -173,6 +173,7 @@ export const ProjectionModelSelector = observer(
         {/* Optional Header - only show if there are multiple models or user needs to collapse */}
         {compatibleModels.length > 1 && (
           <TouchableOpacity
+            testID="projection-model-selector-header"
             style={styles.header}
             onPress={toggleExpanded}
             activeOpacity={0.7}>

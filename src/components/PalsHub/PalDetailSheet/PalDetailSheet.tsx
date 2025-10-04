@@ -15,7 +15,7 @@ import {createStyles} from './styles';
 
 import {palsHubService} from '../../../services';
 
-import {palStore} from '../../../store/PalStore';
+import {palStore} from '../../../store';
 
 import type {PalsHubPal} from '../../../types/palshub';
 
@@ -293,6 +293,7 @@ export const PalDetailSheet: React.FC<PalDetailSheetProps> = observer(
               <>
                 {isDownloaded ? (
                   <Button
+                    testID="downloaded-button"
                     mode="contained"
                     disabled
                     icon={() => (
@@ -303,6 +304,7 @@ export const PalDetailSheet: React.FC<PalDetailSheetProps> = observer(
                   </Button>
                 ) : (
                   <Button
+                    testID="download-button"
                     mode="contained"
                     onPress={handleAction}
                     loading={isLoading}

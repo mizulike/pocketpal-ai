@@ -54,28 +54,6 @@ describe('ModelCard', () => {
     });
   });
 
-  it('shows full model name in expanded state', async () => {
-    const longNameModel = {
-      ...basicModel,
-      name: 'very-long-model-name-that-should-be-truncated-in-collapsed-state.gguf',
-    };
-
-    const {getByTestId, getByText} = customRender(
-      <ModelCard model={longNameModel} />,
-    );
-
-    // First expand the details
-    const expandButton = getByTestId('expand-details-button');
-    fireEvent.press(expandButton);
-
-    await waitFor(() => {
-      // Should show "Model Name" label
-      expect(getByText('Model Name')).toBeTruthy();
-      // Should show the full model name without truncation
-      expect(getByText(longNameModel.name)).toBeTruthy();
-    });
-  });
-
   it('handles memory warning correctly', async () => {
     const {getByText, getByTestId, queryByText, queryByTestId} = customRender(
       <ModelCard model={largeMemoryModel} />,

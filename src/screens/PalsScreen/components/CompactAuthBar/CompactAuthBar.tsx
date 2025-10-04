@@ -29,7 +29,7 @@ export const CompactAuthBar: React.FC<CompactAuthBarProps> = observer(
     }
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container} testID="compact-auth-bar">
         <View style={styles.unauthenticatedContent}>
           <View style={styles.infoSection}>
             <LockIcon
@@ -47,7 +47,8 @@ export const CompactAuthBar: React.FC<CompactAuthBarProps> = observer(
               onPress={onSignInPress}
               style={styles.signInButton}
               labelStyle={styles.signInButtonLabel}
-              compact>
+              compact
+              testID="sign-in-button">
               {l10n.palsScreen.signIn}
             </Button>
             <IconButton
@@ -61,6 +62,7 @@ export const CompactAuthBar: React.FC<CompactAuthBarProps> = observer(
               size={20}
               onPress={onDismiss}
               style={styles.dismissButton}
+              testID="dismiss-auth-bar"
             />
           </View>
         </View>

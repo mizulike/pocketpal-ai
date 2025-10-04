@@ -1,7 +1,8 @@
 import {sessionFixtures} from '../../jest/fixtures/chatSessions';
 
 // Mock defaultCompletionSettings to avoid circular imports
-const mockDefaultCompletionSettings = {
+// This should match the actual defaultCompletionSettings from ChatSessionStore
+export const mockDefaultCompletionSettings = {
   version: 3,
   include_thinking_in_context: true,
   n_predict: 1024,
@@ -58,6 +59,9 @@ export const mockChatSessionStore = {
   setNewChatCompletionSettings: jest.fn().mockResolvedValue(undefined),
   resetNewChatCompletionSettings: jest.fn().mockResolvedValue(undefined),
   setActivePal: jest.fn().mockResolvedValue(undefined),
+  resolveCompletionSettings: jest
+    .fn()
+    .mockResolvedValue(mockDefaultCompletionSettings),
   getCurrentCompletionSettings: jest
     .fn()
     .mockResolvedValue(mockDefaultCompletionSettings),

@@ -38,7 +38,7 @@ import {
 
 // Services and stores
 import {authService, syncService} from '../../services';
-import {palStore, Pal} from '../../store/PalStore';
+import {palStore, Pal} from '../../store';
 import {hasVideoCapability} from '../../utils/pal-capabilities';
 
 import type {PalsHubPal} from '../../types/palshub';
@@ -420,6 +420,7 @@ export const PalsScreen: React.FC = observer(() => {
             />
           }
           showsVerticalScrollIndicator={false}
+          testID="pals-flat-list"
         />
       )}
 

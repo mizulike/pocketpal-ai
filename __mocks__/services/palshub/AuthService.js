@@ -13,15 +13,22 @@ const mockAuthService = {
   isAuthenticated: false,
   user: null,
   profile: null,
+  session: null,
   isLoading: false,
   error: null,
   isInitialized: true,
 
   // Methods
+  signInWithEmail: jest.fn().mockResolvedValue(undefined),
+
+  signUpWithEmail: jest.fn().mockResolvedValue(undefined),
+
   signInWithGoogle: jest.fn().mockResolvedValue({
     success: true,
     user: mockProfile,
   }),
+
+  resetPassword: jest.fn().mockResolvedValue(undefined),
 
   signOut: jest.fn().mockResolvedValue({
     success: true,
@@ -58,12 +65,22 @@ const mockAuthService = {
     return this.profile;
   },
 
+  get authState() {
+    return {
+      user: this.user,
+      profile: this.profile,
+      session: this.session,
+      isLoading: this.isLoading,
+      isAuthenticated: this.isAuthenticated,
+      error: this.error,
+    };
+  },
+
   // Private methods (mocked for completeness)
   initAuthListener: jest.fn(),
   handleAuthStateChange: jest.fn(),
   createOrUpdateProfile: jest.fn().mockResolvedValue(mockProfile),
   fetchProfile: jest.fn().mockResolvedValue(mockProfile),
-  // isSupabaseConfigured: jest.fn().mockReturnValue(true),
 };
 
 // Create a singleton instance

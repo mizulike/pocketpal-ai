@@ -5,6 +5,7 @@
 const {authService} = require('./palshub/AuthService');
 const {syncService} = require('./palshub/SyncService');
 const {palsHubService} = require('./palshub/PalsHubService');
+const {PalsHubErrorHandler, RetryHandler} = require('./palshub/ErrorHandler');
 const {
   supabase,
   getAuthHeaders,
@@ -28,17 +29,6 @@ const purchaseService = {
   purchaseProduct: jest.fn().mockResolvedValue(null),
   restorePurchases: jest.fn().mockResolvedValue([]),
   validateReceipt: jest.fn().mockResolvedValue(false),
-};
-
-const PalsHubErrorHandler = {
-  handleError: jest.fn(),
-  logError: jest.fn(),
-  reportError: jest.fn(),
-};
-
-const RetryHandler = {
-  retry: jest.fn().mockResolvedValue(null),
-  withRetry: jest.fn().mockResolvedValue(null),
 };
 
 // Export all services

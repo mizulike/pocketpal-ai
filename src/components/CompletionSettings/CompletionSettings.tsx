@@ -141,7 +141,7 @@ export const CompletionSettings: React.FC<Props> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="completion-settings">
       {renderIntegerInput({name: 'n_predict'})}
       {renderSwitch('include_thinking_in_context')}
       {renderSlider({name: 'temperature'})}

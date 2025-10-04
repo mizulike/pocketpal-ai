@@ -77,6 +77,7 @@ export const FilterChips: React.FC<FilterChipsProps> = observer(
           contentContainerStyle={styles.scrollContent}>
           {visibleFilters.map(option => (
             <Chip
+              testID={`filter-chip-${option.key}`}
               key={option.key}
               mode={activeFilter === option.key ? 'flat' : 'outlined'}
               selected={activeFilter === option.key}

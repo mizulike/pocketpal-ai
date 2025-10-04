@@ -162,6 +162,7 @@ export const AuthSheet: React.FC<AuthSheetProps> = observer(
           <View style={styles.authForm}>
             {isSignUp && (
               <TextInput
+                testID="full-name-input"
                 label="Full Name"
                 value={fullName}
                 onChangeText={setFullName}
@@ -172,6 +173,7 @@ export const AuthSheet: React.FC<AuthSheetProps> = observer(
             )}
 
             <TextInput
+              testID="email-input"
               label="Email"
               value={email}
               onChangeText={setEmail}
@@ -183,6 +185,7 @@ export const AuthSheet: React.FC<AuthSheetProps> = observer(
             />
 
             <TextInput
+              testID="password-input"
               label="Password"
               value={password}
               onChangeText={setPassword}

@@ -263,48 +263,6 @@ describe('ModelsScreen', () => {
     });
   });
 
-  // TODO: fix this test
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('hides reset dialog on cancel', async () => {
-    const {getByTestId, queryByTestId} = render(<ModelsScreen />);
-
-    // Open the FAB group
-    const fabGroup = getByTestId('fab-group');
-    fireEvent.press(fabGroup);
-
-    // Wait for the FAB group to open and its children to be accessible
-    await waitFor(() => {
-      const resetFab = getByTestId('reset-fab', {includeHiddenElements: true});
-      expect(resetFab).toBeTruthy();
-    });
-    const resetFab = getByTestId('reset-fab', {includeHiddenElements: true});
-
-    await act(async () => {
-      fireEvent.press(resetFab);
-    });
-
-    // Wait for dialog to be visible
-    await waitFor(() => {
-      expect(getByTestId('reset-dialog')).toBeTruthy();
-    });
-
-    // Press cancel button
-    const cancelButton = getByTestId('cancel-reset-button');
-    await act(async () => {
-      fireEvent.press(cancelButton);
-    });
-
-    // Wait for dialog to be hidden
-    await waitFor(
-      () => {
-        expect(queryByTestId('reset-dialog')).toBeNull();
-      },
-      {
-        timeout: 10000,
-      },
-    );
-  }, 15000);
-
   // Add tests for model filtering and grouping
   describe('Model filtering and grouping', () => {
     beforeEach(() => {

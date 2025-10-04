@@ -75,7 +75,9 @@ export const ExpandableSearch: React.FC<ExpandableSearchProps> = observer(
     }
 
     return (
-      <Animated.View style={[styles.container, {height: animatedHeight}]}>
+      <Animated.View
+        style={[styles.container, {height: animatedHeight}]}
+        testID="expandable-search">
         <View style={styles.searchContent}>
           <View style={styles.searchInputContainer}>
             <SearchIcon
@@ -92,11 +94,13 @@ export const ExpandableSearch: React.FC<ExpandableSearchProps> = observer(
               style={styles.searchInput}
               autoFocus={isExpanded}
               returnKeyType="search"
+              testID="search-input"
             />
             {searchQuery.length > 0 && (
               <TouchableOpacity
                 onPress={() => setSearchQuery('')}
-                style={styles.clearButton}>
+                style={styles.clearButton}
+                testID="clear-search-button">
                 <XIcon
                   stroke={theme.colors.onSurfaceVariant}
                   width={16}
@@ -107,7 +111,10 @@ export const ExpandableSearch: React.FC<ExpandableSearchProps> = observer(
           </View>
 
           <View style={styles.searchActions}>
-            <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+            <TouchableOpacity
+              onPress={handleClose}
+              style={styles.closeButton}
+              testID="close-search-button">
               <XIcon
                 stroke={theme.colors.onSurfaceVariant}
                 width={18}

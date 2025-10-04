@@ -27,7 +27,7 @@ import {SystemPromptSection} from './SystemPromptSection';
 import {DynamicParameterForm} from '../DynamicParameters';
 import {PalGenerationSettingsSheet} from '../PalGenerationSettingsSheet';
 
-import {palStore} from '../../store/PalStore';
+import {palStore} from '../../store';
 
 import type {Pal} from '../../types/pal';
 
@@ -52,6 +52,7 @@ const INITIAL_STATE: PalFormData = {
   color: undefined,
   promptGenerationModel: undefined,
   generatingPrompt: '',
+  completionSettings: undefined,
 };
 
 export const PalSheet: React.FC<PalSheetProps> = observer(
@@ -171,6 +172,7 @@ export const PalSheet: React.FC<PalSheetProps> = observer(
         color: pal.color,
         promptGenerationModel: pal.promptGenerationModel,
         generatingPrompt: pal.generatingPrompt || '',
+        completionSettings: pal.completionSettings,
         ...pal.parameters, // Spread dynamic parameters
       };
       methods.reset(formData);
@@ -403,7 +405,8 @@ export const PalSheet: React.FC<PalSheetProps> = observer(
                   mode="contained"
                   loading={isSaving}
                   disabled={isSaving}
-                  onPress={methods.handleSubmit(onSubmit)}>
+                  onPress={methods.handleSubmit(onSubmit)}
+                  testID="submit-button">
                   {isEditing
                     ? l10n.common.save
                     : l10n.components.assistantPalSheet.create}

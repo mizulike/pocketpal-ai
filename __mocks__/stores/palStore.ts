@@ -1,4 +1,3 @@
-import {makeAutoObservable} from 'mobx';
 import type {Pal, LegacyPalData} from '../../src/store/PalStore';
 import {migrateLegacyPalToNew} from '../../src/utils/pal-migration';
 
@@ -6,7 +5,7 @@ class MockPalStore {
   pals: Pal[] = [];
 
   constructor() {
-    makeAutoObservable(this);
+    // makeAutoObservable(this);
   }
 
   addPal = jest.fn((data: LegacyPalData) => {
@@ -69,6 +68,10 @@ class MockPalStore {
   searchPalsHubPals = jest.fn(async () => {});
   loadUserLibrary = jest.fn(async () => {});
   loadUserCreatedPals = jest.fn(async () => {});
+
+  // PalsHub-related methods
+  isPalsHubPalDownloaded = jest.fn(() => false);
+  downloadPalsHubPal = jest.fn(async () => {});
 }
 
 export const mockPalStore = new MockPalStore();

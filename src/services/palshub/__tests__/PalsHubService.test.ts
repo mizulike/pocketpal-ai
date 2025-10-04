@@ -1,39 +1,70 @@
-import {PalsHubError} from '../PalsHubService';
+jest.mock('../AuthService', () => ({
+  authService: {isAuthenticated: false, user: null},
+}));
 
-// Create a simple integration test that verifies the service can be instantiated
-// and basic error handling works without complex mocking
+jest.mock('../PalsHubApiService', () => ({
+  palsHubApiService: {
+    getPal: jest.fn(),
+  },
+}));
 
 describe('PalsHubService', () => {
-  describe('PalsHubError', () => {
-    it('should create error with message and details', () => {
-      const error = new PalsHubError('Test error', {code: 'TEST'});
+  afterEach(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
+  });
 
-      expect(error.name).toBe('PalsHubError');
-      expect(error.message).toBe('Test error');
-      expect(error.details).toEqual({code: 'TEST'});
-    });
-
-    it('should create error with just message', () => {
-      const error = new PalsHubError('Simple error');
-
-      expect(error.name).toBe('PalsHubError');
-      expect(error.message).toBe('Simple error');
-      expect(error.details).toBeUndefined();
+  it('checkPalOwnership returns owned=false when unauthenticated', async () => {
+    jest.doMock('../AuthService', () => ({
+      authService: {isAuthenticated: false, user: null},
+    }));
+    const {palsHubService} = require('../PalsHubService');
+    await expect(palsHubService.checkPalOwnership('pal-1')).resolves.toEqual({
+      owned: false,
     });
   });
 
-  describe('Service instantiation', () => {
-    it('should be able to import and instantiate the service', () => {
-      // This test verifies that the service can be imported and instantiated
-      // without throwing errors during module loading
-      const {palsHubService} = require('../PalsHubService');
-      expect(palsHubService).toBeDefined();
-      expect(typeof palsHubService.getPals).toBe('function');
-      expect(typeof palsHubService.getLibrary).toBe('function');
-      expect(typeof palsHubService.getMyPals).toBe('function');
-      expect(typeof palsHubService.getCategories).toBe('function');
-      expect(typeof palsHubService.getTags).toBe('function');
-      expect(typeof palsHubService.checkPalOwnership).toBe('function');
+  it('checkPalOwnership returns owned flag based on pal.is_owned', async () => {
+    jest.doMock('../AuthService', () => ({
+      authService: {isAuthenticated: true, user: {id: 'u1'}},
+    }));
+    const {palsHubApiService} = require('../PalsHubApiService');
+    (palsHubApiService.getPal as jest.Mock).mockResolvedValue({
+      id: 'pal-1',
+      is_owned: true,
     });
+    const {palsHubService} = require('../PalsHubService');
+
+    await expect(palsHubService.checkPalOwnership('pal-1')).resolves.toEqual({
+      owned: true,
+      purchase_date: undefined,
+    });
+
+    (palsHubApiService.getPal as jest.Mock).mockResolvedValue({
+      id: 'pal-1',
+      is_owned: false,
+    });
+    await expect(palsHubService.checkPalOwnership('pal-1')).resolves.toEqual({
+      owned: false,
+      purchase_date: undefined,
+    });
+  });
+
+  it('checkPalOwnership wraps unknown errors into PalsHubError', async () => {
+    jest.doMock('../AuthService', () => ({
+      authService: {isAuthenticated: true, user: {id: 'u1'}},
+    }));
+    const {palsHubApiService} = require('../PalsHubApiService');
+    (palsHubApiService.getPal as jest.Mock).mockRejectedValue(
+      new Error('boom'),
+    );
+    const {palsHubService, PalsHubError} = require('../PalsHubService');
+
+    await expect(palsHubService.checkPalOwnership('pal-1')).rejects.toThrow(
+      PalsHubError,
+    );
+    await expect(palsHubService.checkPalOwnership('pal-1')).rejects.toThrow(
+      'Failed to check ownership: boom',
+    );
   });
 });
